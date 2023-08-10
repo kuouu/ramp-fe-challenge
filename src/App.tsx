@@ -13,6 +13,7 @@ export function App() {
   const { data: paginatedTransactions, ...paginatedTransactionsUtils } = usePaginatedTransactions()
   const { data: transactionsByEmployee, ...transactionsByEmployeeUtils } = useTransactionsByEmployee()
   const [isLoading, setIsLoading] = useState(false)
+  const [isEmployeeLoaded, setIsEmployeeLoaded] = useState(false)
   const [mergedTransactions, setMergedTransactions] = useState<Transaction[]>([]);
 
   useMemo(
@@ -35,11 +36,15 @@ export function App() {
     setIsLoading(true)
     transactionsByEmployeeUtils.invalidateData()
 
-    await employeeUtils.fetchAll()
+    if (!isEmployeeLoaded)  {
+      await employeeUtils.fetchAll()
+      setIsEmployeeLoaded(true)
+    }
+
     await paginatedTransactionsUtils.fetchAll()
 
     setIsLoading(false)
-  }, [employeeUtils, paginatedTransactionsUtils, transactionsByEmployeeUtils])
+  }, [employeeUtils, paginatedTransactionsUtils, transactionsByEmployeeUtils, isEmployeeLoaded])
 
   const loadTransactionsByEmployee = useCallback(
     async (employeeId: string) => {
@@ -64,6 +69,7 @@ export function App() {
 
         <InputSelect<Employee>
           isLoading={isLoading}
+          isEmployeeLoaded={isEmployeeLoaded}
           defaultValue={EMPTY_EMPLOYEE}
           items={employees === null ? [] : [EMPTY_EMPLOYEE, ...employees]}
           label="Filter by employee"

@@ -8,6 +8,7 @@ export type InputSelectProps<TItem> = {
   parseItem: (item: TItem) => InputSelectItem
   isLoading?: boolean
   loadingLabel: string
+  isEmployeeLoaded: boolean
 }
 
 export type DropdownPosition = {

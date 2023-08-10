@@ -11,6 +11,7 @@ export function InputSelect<TItem>({
   parseItem,
   isLoading,
   loadingLabel,
+  isEmployeeLoaded
 }: InputSelectProps<TItem>) {
   const [selectedValue, setSelectedValue] = useState<TItem | null>(defaultValue ?? null)
   const [dropdownPosition, setDropdownPosition] = useState<DropdownPosition>({
@@ -83,7 +84,7 @@ export function InputSelect<TItem>({
             return null
           }
 
-          if (isLoading) {
+          if (!isEmployeeLoaded) {
             return <div className="RampInputSelect--dropdown-item">{loadingLabel}...</div>
           }
 
