@@ -18,12 +18,12 @@ export function App() {
 
   useMemo(
     () => {
-      if(paginatedTransactions) {
+      if (paginatedTransactions) {
         setMergedTransactions(prevTransactions => [
           ...prevTransactions,
           ...paginatedTransactions.data
         ]);
-      } else if(transactionsByEmployee) {
+      } else if (transactionsByEmployee) {
         setMergedTransactions(transactionsByEmployee);
       } else {
         setMergedTransactions([])
@@ -36,7 +36,7 @@ export function App() {
     setIsLoading(true)
     transactionsByEmployeeUtils.invalidateData()
 
-    if (!isEmployeeLoaded)  {
+    if (!isEmployeeLoaded) {
       await employeeUtils.fetchAll()
       setIsEmployeeLoaded(true)
     }
@@ -96,17 +96,22 @@ export function App() {
         <div className="RampGrid">
           <Transactions transactions={mergedTransactions} />
 
-          {mergedTransactions !== null && (
-            <button
-              className="RampButton"
-              disabled={paginatedTransactionsUtils.loading}
-              onClick={async () => {
-                await loadAllTransactions()
-              }}
-            >
-              View More
-            </button>
-          )}
+          {
+            mergedTransactions !== null
+            && paginatedTransactions?.nextPage !== null
+            && transactionsByEmployee === null
+            && (
+              <button
+                className="RampButton"
+                disabled={paginatedTransactionsUtils.loading}
+                onClick={async () => {
+                  await loadAllTransactions()
+                }}
+              >
+                View More
+              </button>
+            )
+          }
         </div>
       </main>
     </Fragment>
